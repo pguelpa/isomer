@@ -1,6 +1,13 @@
 # Isomer
 
-TODO: Write a gem description
+Isomer is a gem to help manage your application's configuration files.
+It is built with the following ideas in mind:
+
+* Easily define, store, and save configuration parameters
+* Work with YAML files and environment variables
+* Allow for mapping from file / environment variables to parameter
+* Allow for required parameters
+* Allow for default parameters
 
 ## Installation
 
@@ -18,7 +25,33 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### With YAML files
+
+```ruby
+class MyFancyConfiguration < Isomer::Base
+  from :file, path: Rails.root.join('config', 'app_card.yml'), base: Rails.env
+
+  parameter :url # defaults to { required: false, from: 'url', default: nil }
+  parameter :api_key, required: true
+  parameter :timeout
+
+  parameter :logger, default: Rails.logger
+end
+```
+
+### With environment varialbes
+
+```ruby
+class MyFancyConfiguration < Isomer::Base
+  from :environment, base: 'FANCY_CONFIG_'
+
+  parameter :url # defaults to { required: false, from: 'url', default: nil }
+  parameter :api_key
+  parameter :timeout
+
+  parameter :logger, default: Rails.logger
+end
+```
 
 ## Contributing
 
