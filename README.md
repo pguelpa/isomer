@@ -29,14 +29,16 @@ Or install it yourself as:
 
 ```ruby
 class MyFancyConfiguration < Isomer::Base
-  from :file, path: Rails.root.join('config', 'app_card.yml'), base: Rails.env
-
-  parameter :url # defaults to { required: false, from: 'url', default: nil }
+  parameter :url # defaults to { required: false, name: 'url', default: nil }
   parameter :api_key, required: true
   parameter :timeout
 
   parameter :logger, default: Rails.logger
 end
+
+...
+
+MY_FANCY_CONFIGURATION = MyFancyConfiguration.from(:file, path: Rails.root.join('config', 'app_card.yml'), base: Rails.env)
 ```
 
 ### With environment varialbes
@@ -51,6 +53,10 @@ class MyFancyConfiguration < Isomer::Base
 
   parameter :logger, default: Rails.logger
 end
+
+...
+
+MY_FANCY_CONFIGURATION = MyFancyConfiguration.from(:environment, base: 'FANCY_CONFIG_')
 ```
 
 ## Contributing
