@@ -25,7 +25,19 @@ Or install it yourself as:
 
 ## Usage
 
-### With YAML files
+For most configurations, you can use the simple setup approach
+
+```ruby
+MY_FANCY_CONFIGURATION = Isomer.configure(:file, base: Rails.env) do |config|
+  config.parameter :url # defaults to { required: false, from: 'url', default: nil }
+  config.parameter :api_key
+  config.parameter :timeout
+
+  config.parameter :logger, default: Rails.logger
+end
+```
+
+If you have a more complex setup, or want add extra methods to your configuration class, you can create your own.
 
 ```ruby
 class MyFancyConfiguration < Isomer::Base
@@ -35,27 +47,17 @@ class MyFancyConfiguration < Isomer::Base
 
   parameter :logger, default: Rails.logger
 end
+```
 
-...
+### Initialize with a YAML file
 
+```ruby
 MY_FANCY_CONFIGURATION = MyFancyConfiguration.from(:file, path: Rails.root.join('config', 'app_card.yml'), base: Rails.env)
 ```
 
-### With environment varialbes
+### Initialize with environment variables
 
 ```ruby
-class MyFancyConfiguration < Isomer::Base
-  from :environment, base: 'FANCY_CONFIG_'
-
-  parameter :url # defaults to { required: false, from: 'url', default: nil }
-  parameter :api_key
-  parameter :timeout
-
-  parameter :logger, default: Rails.logger
-end
-
-...
-
 MY_FANCY_CONFIGURATION = MyFancyConfiguration.from(:environment, base: 'FANCY_CONFIG_')
 ```
 

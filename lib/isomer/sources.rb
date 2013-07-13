@@ -1,4 +1,4 @@
 module Isomer::Sources
 end
 
-require 'isomer/sources/yaml'
+require_relative 'sources/yaml'

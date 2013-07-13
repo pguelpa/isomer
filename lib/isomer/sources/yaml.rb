@@ -20,6 +20,6 @@ class Isomer::Sources::Yaml
   end
 
   def for(parameter)
-    configuration[parameter]
+    configuration[parameter.to_s]
   end
 end
