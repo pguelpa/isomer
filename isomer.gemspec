@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Isomer::VERSION
   spec.authors       = ["Paul Guelpa"]
   spec.email         = ["paul.guelpa@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.description   = %q{A general configuration solution}
+  spec.summary       = %q{A general configuration solution}
   spec.homepage      = ""
   spec.license       = "MIT"
 
