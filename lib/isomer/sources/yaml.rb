@@ -1,11 +1,11 @@
 require 'yaml'
 
-class Isomer::Sources::Yaml
-  attr_reader :path, :base, :configuration
+class Isomer::Sources::Yaml < Isomer::Sources::Base
+  attr_reader :path
 
   def initialize(path, base = nil)
     @path = path
-    @base = base
+    super(base)
   end
 
   def load
@@ -17,9 +17,5 @@ class Isomer::Sources::Yaml
         @configuration = values
       end
     end
-  end
-
-  def for(parameter)
-    configuration[parameter.to_s]
   end
 end

@@ -28,7 +28,7 @@ Or install it yourself as:
 For most configurations, you can use the simple setup approach
 
 ```ruby
-MY_FANCY_CONFIGURATION = Isomer.configure(:file, base: Rails.env) do |config|
+MY_FANCY_CONFIGURATION = Isomer.configure(:yaml, base: Rails.env) do |config|
   config.parameter :url # defaults to { required: false, from: 'url', default: nil }
   config.parameter :api_key
   config.parameter :timeout
@@ -52,7 +52,7 @@ end
 ### Initialize with a YAML file
 
 ```ruby
-MY_FANCY_CONFIGURATION = MyFancyConfiguration.from(:file, path: Rails.root.join('config', 'app_card.yml'), base: Rails.env)
+MY_FANCY_CONFIGURATION = MyFancyConfiguration.from(:yaml, path: Rails.root.join('config', 'app_card.yml'), base: Rails.env)
 ```
 
 ### Initialize with environment variables

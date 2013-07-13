@@ -29,25 +29,4 @@ describe Isomer::Sources::Yaml do
       end
     end
   end
-
-  describe '#for' do
-    before do
-      File.stub(:exists?).and_return(true)
-      YAML.stub(:load_file).and_return({'name' => 'value'})
-    end
-
-    it 'returns the value for the parameter' do
-      source = Isomer::Sources::Yaml.new(anything)
-      source.load
-
-      source.for('name').should == 'value'
-    end
-
-    it 'converts the parameter to a string' do
-      source = Isomer::Sources::Yaml.new(anything)
-      source.load
-
-      source.for(:name).should == 'value'
-    end
-  end
 end

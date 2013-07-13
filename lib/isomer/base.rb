@@ -5,16 +5,19 @@ class Isomer::Base
     base = options.delete(:base)
 
     case source_type
-    when :file
+    when :test
+      payload = options.delete(:payload)
+      source = Isomer::Sources::Test.new(payload, base)
+    when :yaml
       path = options.delete(:path)
       source = Isomer::Sources::Yaml.new(path, base)
-      source.load
     when :environment
       raise "Environment type not implemented yet"
     else
       raise "Unknown source type #{source_type}"
     end
 
+    source.load
     new(source)
   end
 
