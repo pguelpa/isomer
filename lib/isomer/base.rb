@@ -2,8 +2,8 @@ class Isomer::Base
   attr_reader :source, :base
 
   def self.from(source_type, options = {})
-    source = Isomer::Sources.factory(source_type, options)
-    source.load_and_validate(@parameters)
+    source = Isomer::Sources.factory(source_type, @parameters, options)
+    source.load_and_validate
 
     new(source)
   end

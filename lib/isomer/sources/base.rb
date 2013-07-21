@@ -1,20 +1,21 @@
 class Isomer::Sources::Base
-  attr_reader :configuration, :errors
+  attr_reader :parameters, :configuration, :errors
 
-  def initialize
+  def initialize(parameters)
+    @parameters = parameters
     @errors = []
   end
 
-  def load(parameters)
+  def load_and_validate
+    load
+    validate
+  end
+
+  def load
     raise NotImplementedError, "You must implement 'load' in #{self.class.name}"
   end
 
-  def load_and_validate(parameters)
-    load(parameters)
-    validate(parameters)
-  end
-
-  def validate(parameters)
+  def validate
     parameters.each do |parameter|
       if parameter.required?
         value = configuration[parameter.name]

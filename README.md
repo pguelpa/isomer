@@ -52,7 +52,7 @@ end
 ### Initialize with a YAML file
 
 ```ruby
-MY_FANCY_CONFIGURATION = MyFancyConfiguration.from(:yaml, path: Rails.root.join('config', 'app_card.yml'), base: Rails.env)
+MY_FANCY_CONFIGURATION = MyFancyConfiguration.from(:yaml, file: Rails.root.join('config', 'app_card.yml'), base: Rails.env)
 ```
 
 ### Initialize with environment variables

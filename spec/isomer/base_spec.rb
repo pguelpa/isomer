@@ -2,13 +2,16 @@ require 'spec_helper'
 
 describe Isomer::Base do
   describe '.from' do
-    let(:klass) { Class.new(Isomer::Base) }
+    let(:klass) { Class.new(Isomer::Base) { |c| c.parameter :something } }
     let(:source) { double('Source', load_and_validate: anything)}
 
-    it 'passes along the type and options to the factory' do
+    it 'passes along the type, parameters, and options to the factory' do
+      parameter = double('Parameter', required?: false)
+      Isomer::Parameter.stub(:new).and_return(parameter)
+
       Isomer::Sources.
         should_receive(:factory).
-        with(:foo, {bar: 'bar-option'}).
+        with(:foo, [parameter], {bar: 'bar-option'}).
         and_return(source)
 
       klass.from(:foo, {bar: 'bar-option'})

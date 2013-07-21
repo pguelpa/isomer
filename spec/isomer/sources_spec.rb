@@ -6,17 +6,9 @@ describe Isomer::Sources do
       it 'uses the yaml source' do
         Isomer::Sources::Yaml.
           should_receive(:new).
-          with('/tmp/foo/bar.yml', nil)
+          with([], path: '/tmp/foo/bar.yml', base: 'development')
 
-        Isomer::Sources.factory(:yaml, path: '/tmp/foo/bar.yml')
-      end
-
-      it 'passes along the base' do
-        Isomer::Sources::Yaml.
-          should_receive(:new).
-          with(anything, 'production')
-
-        Isomer::Sources.factory(:yaml, path: anything, base: 'production')
+        Isomer::Sources.factory(:yaml, [], path: '/tmp/foo/bar.yml', base: 'development')
       end
     end
   end

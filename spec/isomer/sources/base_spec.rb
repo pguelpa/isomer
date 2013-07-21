@@ -3,16 +3,16 @@ require 'spec_helper'
 describe Isomer::Sources::Base do
   describe '.new' do
     it 'initalizes errors to an empty array' do
-      source = Isomer::Sources::Base.new
+      source = Isomer::Sources::Base.new(anything)
       source.errors.should == []
     end
   end
 
   describe '#load' do
     it 'raises a NotImplementedError' do
-      source = Isomer::Sources::Base.new
+      source = Isomer::Sources::Base.new(anything)
       expect {
-        source.load(anything)
+        source.load
       }.to raise_error(NotImplementedError, "You must implement 'load' in Isomer::Sources::Base")
     end
   end
@@ -20,24 +20,27 @@ describe Isomer::Sources::Base do
   describe '#validate' do
     it 'raises an error for any required parameters not specified' do
       parameter = Isomer::Parameter.new(:the_value, required: true)
-      source = Isomer::Sources::Test.new({})
-      source.load([parameter])
-      expect { source.validate( [parameter] ) }.to raise_error Isomer::RequiredParameterError
+      source = Isomer::Sources::Test.new([parameter], payload: {})
+      source.load
+
+      expect { source.validate }.to raise_error Isomer::RequiredParameterError
     end
   end
 
   describe '#for' do
-    let(:source) { Isomer::Sources::Base.new }
-
     it 'returns the value for the parameter' do
       parameter = double('Parameter', name: 'name')
-      source.stub(:configuration).and_return( {'name' => 'value'} )
+      source = Isomer::Sources::Test.new([parameter], payload: {'name' => 'value'})
+      source.load
+
       source.for(parameter).should == 'value'
     end
 
     it 'returns the default if there is no configuration value' do
       parameter = double('Parameter', name: 'name', default: 'bar')
-      source.stub(:configuration).and_return({})
+      source = Isomer::Sources::Test.new([parameter], payload: {})
+      source.load
+
       source.for(parameter).should == 'bar'
     end
   end

@@ -1,13 +1,10 @@
 module Isomer::Sources
-  def self.factory(type, options={})
+  def self.factory(type, parameters=[], options={})
     case type
     when :test
-      payload = options.delete(:payload)
-      Isomer::Sources::Test.new(payload)
+      Isomer::Sources::Test.new(parameters, options)
     when :yaml
-      base = options.delete(:base)
-      path = options.delete(:path)
-      Isomer::Sources::Yaml.new(path, base)
+      Isomer::Sources::Yaml.new(parameters, options)
     when :environment
       raise "Environment type not implemented yet"
     else

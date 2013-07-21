@@ -1,12 +1,12 @@
 class Isomer::Sources::Test < Isomer::Sources::Base
   attr_accessor :payload
 
-  def initialize(payload)
-    @payload = payload
-    super()
+  def initialize(parameters, options={})
+    @payload = options[:payload]
+    super(parameters)
   end
 
-  def load(parameters)
+  def load
     @configuration = payload
   end
 end
