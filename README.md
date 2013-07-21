@@ -58,7 +58,7 @@ MY_FANCY_CONFIGURATION = MyFancyConfiguration.from(:yaml, file: Rails.root.join(
 ### Initialize with environment variables
 
 ```ruby
-MY_FANCY_CONFIGURATION = MyFancyConfiguration.from(:environment, base: 'FANCY_CONFIG_')
+MY_FANCY_CONFIGURATION = MyFancyConfiguration.from(:environment, prefix: 'FANCY_CONFIG_')
 ```
 
 ## Contributing
