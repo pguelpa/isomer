@@ -1,6 +1,7 @@
 require_relative 'isomer/version'
 require_relative 'isomer/errors'
 require_relative 'isomer/base'
+require_relative 'isomer/parameter'
 require_relative 'isomer/sources'
 
 module Isomer

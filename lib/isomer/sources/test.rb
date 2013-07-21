@@ -6,7 +6,7 @@ class Isomer::Sources::Test < Isomer::Sources::Base
     super(base)
   end
 
-  def load
+  def load(parameters)
     if base && payload.has_key?(base)
       @configuration = payload[base]
     else

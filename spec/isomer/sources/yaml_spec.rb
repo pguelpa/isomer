@@ -7,14 +7,14 @@ describe Isomer::Sources::Yaml do
       YAML.should_receive(:load_file).with('/home/configuration.yml').and_return({'foo' => 'bar'})
 
       source = Isomer::Sources::Yaml.new('/home/configuration.yml')
-      source.load
+      source.load(anything)
 
       source.configuration.should == {'foo' => 'bar'}
     end
 
     it 'does not raise if the file does not exist' do
       source = Isomer::Sources::Yaml.new('/home/configuration.yml')
-      expect { source.load }.to_not raise_error
+      expect { source.load(anything) }.to_not raise_error
     end
 
     context 'with a base' do
@@ -23,7 +23,7 @@ describe Isomer::Sources::Yaml do
         YAML.stub(:load_file).and_return( 'production' => {'limit' => 100} )
 
         source = Isomer::Sources::Yaml.new(anything, 'production')
-        source.load
+        source.load(anything)
 
         source.configuration.should == {'limit' => 100}
       end

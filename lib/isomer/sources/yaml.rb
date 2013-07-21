@@ -8,7 +8,7 @@ class Isomer::Sources::Yaml < Isomer::Sources::Base
     super(base)
   end
 
-  def load
+  def load(parameters)
     if File.exists?(path)
       values = YAML.load_file(path)
       if base && values.has_key?(base)

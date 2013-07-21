@@ -5,11 +5,11 @@ class Isomer::Sources::Base
     @base = base
   end
 
-  def load
+  def load(parameters)
     raise NotImplementedError, "You must implement 'load' in #{self.class.name}"
   end
 
   def for(parameter)
-    configuration[parameter.to_s]
+    configuration[parameter.name] || parameter.default
   end
 end
