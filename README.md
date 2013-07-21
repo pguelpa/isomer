@@ -1,5 +1,7 @@
 # Isomer
 
+[![Build Status](https://travis-ci.org/pguelpa/isomer.png?branch=master)](https://travis-ci.org/pguelpa/isomer)
+
 Isomer is a gem to help manage your application's configuration files.
 It is built with the following ideas in mind:
 
