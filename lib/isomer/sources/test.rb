@@ -1,16 +1,12 @@
 class Isomer::Sources::Test < Isomer::Sources::Base
   attr_accessor :payload
 
-  def initialize(payload, base = nil)
+  def initialize(payload)
     @payload = payload
-    super(base)
+    super()
   end
 
   def load(parameters)
-    if base && payload.has_key?(base)
-      @configuration = payload[base]
-    else
-      @configuration = payload
-    end
+    @configuration = payload
   end
 end

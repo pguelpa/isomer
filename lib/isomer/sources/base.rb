@@ -1,8 +1,7 @@
 class Isomer::Sources::Base
-  attr_reader :base, :configuration, :errors
+  attr_reader :configuration, :errors
 
-  def initialize(base = nil)
-    @base = base
+  def initialize
     @errors = []
   end
 

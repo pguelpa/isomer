@@ -1,12 +1,11 @@
 module Isomer::Sources
   def self.factory(type, options={})
-    base = options.delete(:base)
-
     case type
     when :test
       payload = options.delete(:payload)
-      Isomer::Sources::Test.new(payload, base)
+      Isomer::Sources::Test.new(payload)
     when :yaml
+      base = options.delete(:base)
       path = options.delete(:path)
       Isomer::Sources::Yaml.new(path, base)
     when :environment

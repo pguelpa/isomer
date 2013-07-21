@@ -1,11 +1,12 @@
 require 'yaml'
 
 class Isomer::Sources::Yaml < Isomer::Sources::Base
-  attr_reader :path
+  attr_reader :path, :base
 
   def initialize(path, base = nil)
     @path = path
-    super(base)
+    @base = base
+    super()
   end
 
   def load(parameters)

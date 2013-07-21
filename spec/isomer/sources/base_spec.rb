@@ -10,7 +10,7 @@ describe Isomer::Sources::Base do
 
   describe '#load' do
     it 'raises a NotImplementedError' do
-      source = Isomer::Sources::Base.new(anything)
+      source = Isomer::Sources::Base.new
       expect {
         source.load(anything)
       }.to raise_error(NotImplementedError, "You must implement 'load' in Isomer::Sources::Base")
