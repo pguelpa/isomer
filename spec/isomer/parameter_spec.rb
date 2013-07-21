@@ -9,16 +9,16 @@ describe Isomer::Parameter do
   end
 
   describe '#name' do
-    context 'when there is no alias' do
+    context 'when there is no from option' do
       it 'returns the id as a string' do
         parameter = Isomer::Parameter.new(:foo, {})
         parameter.name.should == 'foo'
       end
     end
 
-    context 'when there is an alias' do
-      it 'returns the alias as a string' do
-        parameter = Isomer::Parameter.new(:bar, {alias: :baz})
+    context 'when there is a from option' do
+      it 'returns the from value as a string' do
+        parameter = Isomer::Parameter.new(:bar, {from: :baz})
         parameter.name.should == 'baz'
       end
     end

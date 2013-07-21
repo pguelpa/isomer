@@ -3,7 +3,7 @@ class Isomer::Base
 
   def self.from(source_type, options = {})
     source = Isomer::Sources.factory(source_type, options)
-    source.load(@parameters)
+    source.load_and_validate(@parameters)
 
     new(source)
   end

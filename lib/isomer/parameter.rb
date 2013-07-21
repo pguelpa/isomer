@@ -4,12 +4,12 @@ class Isomer::Parameter
   def initialize(id, options)
     @id = id
     @required = options[:required] || false
-    @alias = options[:alias]
+    @from = options[:from]
     @default = options[:default]
   end
 
   def name
-    (@alias|| @id).to_s
+    (@from || @id).to_s
   end
 
   def required?
