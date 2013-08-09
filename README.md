@@ -30,9 +30,9 @@ Or install it yourself as:
 For most configurations, you can use the simple setup approach
 
 ```ruby
-MY_FANCY_CONFIGURATION = Isomer.configure(:yaml, base: Rails.env) do |config|
-  config.parameter :url # defaults to { required: false, from: 'url', default: nil }
-  config.parameter :api_key
+MY_FANCY_CONFIGURATION = Isomer.configure(:yaml, file: File.join('config', 'fancy.yml')) do |config|
+  config.parameter :url, name: 'host'
+  config.parameter :api_key, required: true
   config.parameter :timeout
 
   config.parameter :logger, default: Rails.logger
@@ -43,24 +43,63 @@ If you have a more complex setup, or want add extra methods to your configuratio
 
 ```ruby
 class MyFancyConfiguration < Isomer::Base
-  parameter :url # defaults to { required: false, name: 'url', default: nil }
+  parameter :url, name: 'host'
   parameter :api_key, required: true
   parameter :timeout
 
   parameter :logger, default: Rails.logger
 end
+
+...
+
+# In some initializer
+MY_FANCY_CONFIG = MyFancyConfiguration.from(:yaml, file: File.join('config', 'fancy.yml'))
 ```
+
+## Parameters
+
+The core of Isomer is allowing you to define the parameters to pull out of your configuration source.  It takes a parameter name along with a number of options.
+
+The name will be how you access the value from the configuration object.  It also is the default value used when trying to find the value of the parameter in the source.
+
+You can also specify a number of parameters:
+
+* `required`: Means this parameter is required.  If any are missing, `from` will raise a Isomer::RequiredParameterError.  Defaults to `false`
+* `name`: If the configuration source uses a different name than that of the parameter
+* `default`: If you want to specify a default value
+
+## Sources
 
 ### Initialize with a YAML file
 
+#### Options
+
+* `file`: Path to the YAML file (required)
+* `root`: If there are multiple configurations (eg. for different environments), you can specify which one to use
+* `required`: If the configuration file is required
+
+
+#### Example
+
 ```ruby
-MY_FANCY_CONFIGURATION = MyFancyConfiguration.from(:yaml, file: Rails.root.join('config', 'app_card.yml'), base: Rails.env)
+MY_FANCY_CONFIGURATION = MyFancyConfiguration.from(:yaml, file: Rails.root.join('config', 'fancy.yml'), base: Rails.env) do |config|
+  ...
+end
 ```
 
 ### Initialize with environment variables
 
+#### Options
+
+* `convert_case`: Should we automatically uppercase any parameter names when looking for the environment variable (defaults to `true`)
+* `prefix`: Add a prefix when looking up all parameters in the environment
+
+#### Example
+
 ```ruby
-MY_FANCY_CONFIGURATION = MyFancyConfiguration.from(:environment, prefix: 'FANCY_CONFIG_')
+MY_FANCY_CONFIGURATION = MyFancyConfiguration.from(:environment, prefix: 'FANCY_CONFIG_') do |config|
+  ...
+end
 ```
 
 ## Contributing
