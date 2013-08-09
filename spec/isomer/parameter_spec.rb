@@ -18,7 +18,7 @@ describe Isomer::Parameter do
 
     context 'when there is a from option' do
       it 'returns the from value as a string' do
-        parameter = Isomer::Parameter.new(:bar, {from: :baz})
+        parameter = Isomer::Parameter.new(:bar, {name: :baz})
         parameter.name.should == 'baz'
       end
     end
