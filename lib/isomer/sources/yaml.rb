@@ -4,8 +4,8 @@ class Isomer::Sources::Yaml < Isomer::Sources::Base
   attr_reader :file, :base, :required
 
   def initialize(parameters, options={})
-    @file = options[:file]
-    raise Isomer::Error, "YAML source requires the 'file' parameter" if file.nil? || file.empty?
+    @file = options[:file].to_s
+    raise Isomer::Error, "YAML source requires the 'file' parameter" if file.empty?
 
     @base = options[:base]
     @required = !!options[:required]

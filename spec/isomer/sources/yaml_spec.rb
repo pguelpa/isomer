@@ -7,6 +7,11 @@ describe Isomer::Sources::Yaml do
         Isomer::Sources::Yaml.new(anything)
       }.to raise_error(Isomer::Error, "YAML source requires the 'file' parameter")
     end
+
+    it 'always converts the file to a string' do
+      source = Isomer::Sources::Yaml.new(anything, file: :foo)
+      source.file.should == 'foo'
+    end
   end
 
   describe '#load' do
