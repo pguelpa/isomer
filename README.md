@@ -75,7 +75,7 @@ You can also specify a number of parameters:
 #### Options
 
 * `file`: Path to the YAML file (required)
-* `root`: If there are multiple configurations (eg. for different environments), you can specify which one to use
+* `base`: If there are multiple configurations (eg. for different environments), you can specify which one to use
 * `required`: If the configuration file is required
 
 
