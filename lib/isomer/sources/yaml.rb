@@ -16,13 +16,13 @@ class Isomer::Sources::Yaml < Isomer::Sources::Base
   def load
     if File.exists?(file)
       values = YAML.load_file(file)
-      if base && values.has_key?(base)
-        @configuration = values[base]
+      if !values.is_a?(Hash)
+        @configuration = {}
+      elsif base && values.has_key?(base)
+        @configuration = values[base] || {}
       else
         @configuration = values
       end
-
-      @configuration ||= {}
     else
       raise Isomer::Error, "Missing required configuration file '#{file}'" if required
       @configuration = {}

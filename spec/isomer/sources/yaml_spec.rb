@@ -15,24 +15,52 @@ describe Isomer::Sources::Yaml do
   end
 
   describe '#load' do
-    it 'loads the YAML file configuration file' do
-      File.stub(:exists?).and_return(true)
-      YAML.should_receive(:load_file).with('/home/configuration.yml').and_return({'foo' => 'bar'})
+    context 'when the file exists' do
+      context 'when the configuration values are a hash' do
+        it 'sets the configuration to the YAML file contents' do
+          File.stub(:exists?).and_return(true)
+          YAML.should_receive(:load_file).with('/home/configuration.yml').and_return({'foo' => 'bar'})
 
-      source = Isomer::Sources::Yaml.new(anything, file: '/home/configuration.yml')
-      source.load
+          source = Isomer::Sources::Yaml.new(anything, file: '/home/configuration.yml')
+          source.load
 
-      source.configuration.should == {'foo' => 'bar'}
-    end
+          source.configuration.should == {'foo' => 'bar'}
+        end
+      end
 
-    it 'returns an empty hash if the content is nil' do
-      File.stub(:exists?).and_return(true)
-      YAML.stub(:load_file).and_return(nil)
+      context 'when the configuration values are not a hash' do
+        it 'sets the configuration to an empty hash' do
+          File.stub(:exists?).and_return(true)
+          YAML.stub(:load_file).and_return('string value')
 
-      source = Isomer::Sources::Yaml.new(anything, file: 'anything.yml')
-      source.load
+          source = Isomer::Sources::Yaml.new(anything, file: 'anything.yml')
+          source.load
 
-      source.configuration.should == {}
+          source.configuration.should == {}
+        end
+      end
+
+      context 'with a base' do
+        it 'returns the configuration under the base node' do
+          File.stub(:exists?).and_return(true)
+          YAML.stub(:load_file).and_return( 'production' => {'limit' => 100} )
+
+          source = Isomer::Sources::Yaml.new(anything, file: 'filish.yml', base: 'production')
+          source.load
+
+          source.configuration.should == {'limit' => 100}
+        end
+
+        it 'returns an empty hash if the content is nil' do
+          File.stub(:exists?).and_return(true)
+          YAML.stub(:load_file).and_return( 'production' => nil )
+
+          source = Isomer::Sources::Yaml.new(anything, file: 'filish.yml', base: 'production')
+          source.load
+
+          source.configuration.should == {}
+        end
+      end
     end
 
     context 'when the file does not exist' do
@@ -56,28 +84,6 @@ describe Isomer::Sources::Yaml do
             source.load
           }.to raise_error(Isomer::Error, "Missing required configuration file '/home/configuration.yml'")
         end
-      end
-    end
-
-    context 'with a base' do
-      it 'returns the configuration under the base node' do
-        File.stub(:exists?).and_return(true)
-        YAML.stub(:load_file).and_return( 'production' => {'limit' => 100} )
-
-        source = Isomer::Sources::Yaml.new(anything, file: 'filish.yml', base: 'production')
-        source.load
-
-        source.configuration.should == {'limit' => 100}
-      end
-
-      it 'returns an empty hash if the content is nil' do
-        File.stub(:exists?).and_return(true)
-        YAML.stub(:load_file).and_return( 'production' => nil )
-
-        source = Isomer::Sources::Yaml.new(anything, file: 'filish.yml', base: 'production')
-        source.load
-
-        source.configuration.should == {}
       end
     end
   end
