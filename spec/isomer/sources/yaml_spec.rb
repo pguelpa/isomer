@@ -25,6 +25,16 @@ describe Isomer::Sources::Yaml do
       source.configuration.should == {'foo' => 'bar'}
     end
 
+    it 'returns an empty hash if the content is nil' do
+      File.stub(:exists?).and_return(true)
+      YAML.stub(:load_file).and_return(nil)
+
+      source = Isomer::Sources::Yaml.new(anything, file: 'anything.yml')
+      source.load
+
+      source.configuration.should == {}
+    end
+
     context 'when the file does not exist' do
       context 'when it is not required' do
         it 'does not blow up' do
@@ -58,6 +68,16 @@ describe Isomer::Sources::Yaml do
         source.load
 
         source.configuration.should == {'limit' => 100}
+      end
+
+      it 'returns an empty hash if the content is nil' do
+        File.stub(:exists?).and_return(true)
+        YAML.stub(:load_file).and_return( 'production' => nil )
+
+        source = Isomer::Sources::Yaml.new(anything, file: 'filish.yml', base: 'production')
+        source.load
+
+        source.configuration.should == {}
       end
     end
   end

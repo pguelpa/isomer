@@ -21,6 +21,8 @@ class Isomer::Sources::Yaml < Isomer::Sources::Base
       else
         @configuration = values
       end
+
+      @configuration ||= {}
     else
       raise Isomer::Error, "Missing required configuration file '#{file}'" if required
       @configuration = {}
