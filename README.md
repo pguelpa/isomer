@@ -102,6 +102,20 @@ MY_FANCY_CONFIGURATION = MyFancyConfiguration.from(:environment, prefix: 'FANCY_
 end
 ```
 
+### Initialize with a hash (useful for testing)
+
+#### Options
+
+* `payload`: The hash of values that you want
+
+#### Example
+
+```ruby
+MY_FANCY_CONFIGURATION = MyFancyConfiguration.from(:test, payload: {'foo' => 'bar'}) do |config|
+  ...
+end
+```
+
 ## Contributing
 
 1. Fork it
