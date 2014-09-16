@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Paul Guelpa"]
   spec.email         = ["paul.guelpa@gmail.com"]
   spec.description   = %q{A general configuration solution}
-  spec.summary       = %q{A general configuration solution}
-  spec.homepage      = ""
+  spec.summary       = %q{Define your configuration once, and change the data source without having to re-write your application code.}
+  spec.homepage      = "https://github.com/pguelpa/isomer"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -19,6 +19,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.3"
-  spec.add_development_dependency "rake"
-  spec.add_development_dependency "rspec"
+  spec.add_development_dependency "rake", "~> 10.3"
+  spec.add_development_dependency "rspec", "~> 2.14"
 end
