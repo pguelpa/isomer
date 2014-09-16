@@ -36,6 +36,14 @@ describe Isomer::Sources::Base do
       source.for(parameter).should == 'value'
     end
 
+    it 'handles setting a parameter to a boolean false correctly' do
+      parameter = double('Parameter', name: 'my-boolean', default: true)
+      source = Isomer::Sources::Test.new([parameter], payload: {'my-boolean' => false})
+      source.load
+
+      source.for(parameter).should == false
+    end
+
     it 'returns the default if there is no configuration value' do
       parameter = double('Parameter', name: 'name', default: 'bar')
       source = Isomer::Sources::Test.new([parameter], payload: {})

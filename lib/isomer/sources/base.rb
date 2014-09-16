@@ -27,7 +27,7 @@ class Isomer::Sources::Base
   end
 
   def for(parameter)
-    configuration[parameter.name] || parameter.default
+    configuration.has_key?(parameter.name) ? configuration[parameter.name] : parameter.default
   end
 
   private
