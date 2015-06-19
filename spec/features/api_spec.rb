@@ -45,7 +45,7 @@ describe 'defining a configuration' do
         end
       end
 
-      context 'with valid values for all required fields' do
+      context 'with invalid values for any required fields' do
         it 'is invalid' do
           nucleus = Isomer::Nucleus.new do |n|
             n.parameter :host, required: true
