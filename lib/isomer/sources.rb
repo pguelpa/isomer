@@ -14,6 +14,7 @@ module Isomer::Sources
 end
 
 require_relative 'sources/base'
+require_relative 'sources/environment'
+require_relative 'sources/hash'
 require_relative 'sources/test'
 require_relative 'sources/yaml'
-require_relative 'sources/environment'

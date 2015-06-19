@@ -14,9 +14,9 @@ describe Isomer do
 
     it 'creates a new instance of the configuration class' do
       klass = double('Anonymous Class')
-      Class.stub(:new).with(Isomer::Base).and_return(klass)
+      allow(Class).to receive(:new).with(Isomer::Base).and_return(klass)
 
-      klass.should_receive(:from).with(:foo, :bar).and_return(:baz)
+      expect(klass).to receive(:from).with(:foo, :bar).and_return(:baz)
       Isomer.configure(:foo, :bar).should == :baz
     end
   end
