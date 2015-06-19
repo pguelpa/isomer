@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Isomer do
   describe '.configure' do
     before do
-      Isomer::Base.stub(:from)
+      allow(Isomer::Base).to receive(:from)
     end
 
     it 'yields the configuration to the class' do
@@ -16,8 +16,8 @@ describe Isomer do
       klass = double('Anonymous Class')
       allow(Class).to receive(:new).with(Isomer::Base).and_return(klass)
 
-      expect(klass).to receive(:from).with(:foo, :bar).and_return(:baz)
-      Isomer.configure(:foo, :bar).should == :baz
+      expect(klass).to receive(:from).with(:foo, :bar)
+      Isomer.configure(:foo, :bar)
     end
   end
 end

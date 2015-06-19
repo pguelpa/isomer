@@ -7,9 +7,7 @@ class Isomer::Configuration
         define_method(id) { get(parameter) }
       end
     end
-    config = klass.new(nucleus, *sources)
-    config.validate!
-    config
+    klass.new(nucleus, *sources)
   end
 
   def initialize(nucleus, *sources)
@@ -17,12 +15,14 @@ class Isomer::Configuration
     @sources = sources
   end
 
-  def validate!
-    errors = @nucleus.parameters.map do |_, p|
+  def valid?
+    errors.empty?
+  end
+
+  def errors
+    @nucleus.parameters.map do |_, p|
       p.validate(get(p)) if p.required?
     end.compact
-
-    raise Isomer::RequiredParameterError, errors.join(', ') if !errors.empty?
   end
 
   def get(parameter)

@@ -7,6 +7,7 @@ require_relative 'isomer/sources'
 require_relative 'isomer/version'
 
 module Isomer
+  # Deprecated, use `Isomer::Configuration` instead
   def self.configure(source_type, options)
     Class.new(Isomer::Base) do
       yield(self)

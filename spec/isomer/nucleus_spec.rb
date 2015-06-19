@@ -3,11 +3,11 @@ require 'spec_helper'
 describe Isomer::Nucleus do
   describe '.build' do
     it 'return an instance of a nucleus' do
-      expect(described_class.build).to be_a(Isomer::Nucleus)
+      expect(described_class.new).to be_a(Isomer::Nucleus)
     end
 
     it 'builds a set from the defined parameters' do
-      config = described_class.build { |c| c.parameter :tails }
+      config = described_class.new { |c| c.parameter :tails }
       expect(config.parameters[:tails]).to be_a(Isomer::Parameter)
     end
   end

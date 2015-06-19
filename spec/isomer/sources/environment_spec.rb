@@ -1,46 +1,41 @@
 require 'spec_helper'
 
 describe Isomer::Sources::Environment do
-  let(:parameter) { double('Parameter', name: 'token') }
+  describe '.new' do
+    context 'with the convert case option' do
+      it 'defaults to true' do
+        expect(described_class.new.convert_case?).to be(true)
+      end
 
-  describe '#load' do
-    it 'looks up the parameters from the environment' do
-      source = Isomer::Sources::Environment.new([parameter])
-
-      ENV.should_receive(:[]).with('TOKEN')
-      source.load
+      it 'respects the :convert_case option' do
+        expect(described_class.new(convert_case: false).convert_case?).to be(false)
+      end
     end
+  end
 
-    it 'stores all values in the configuration' do
-      source = Isomer::Sources::Environment.new([parameter])
+  describe '#get' do
+    it 'looks up the parameters from the environment' do
+      source = described_class.new()
 
-      ENV.stub(:[]).with('TOKEN').and_return('abcd-efgh')
-      source.load
-      source.configuration.should == {'token' => 'abcd-efgh'}
+      expect(ENV).to receive(:[]).with('TOKEN')
+      source.get('token')
     end
 
     context 'with convert case off' do
       it 'does not uppercase parameter names' do
-        source = Isomer::Sources::Environment.new([parameter], convert_case: false)
+        source = described_class.new(convert_case: false)
 
-        ENV.should_receive(:[]).with('token')
-        source.load
+        expect(ENV).to receive(:[]).with('token')
+        source.get('token')
       end
     end
 
     context 'with a prefix' do
       it 'appends the prefix when looking up the environment variable' do
-        source = Isomer::Sources::Environment.new([parameter], prefix: 'APP_')
+        source = described_class.new(prefix: 'APP_')
 
-        ENV.should_receive(:[]).with('APP_TOKEN')
-        source.load
-      end
-
-      it 'respects the convert case flag' do
-        source = Isomer::Sources::Environment.new([parameter], convert_case: false, prefix: 'app_')
-
-        ENV.should_receive(:[]).with('app_token')
-        source.load
+        expect(ENV).to receive(:[]).with('APP_TOKEN')
+        source.get('token')
       end
     end
   end

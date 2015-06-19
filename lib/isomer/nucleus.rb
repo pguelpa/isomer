@@ -1,14 +1,9 @@
 class Isomer::Nucleus
   attr_reader :parameters
 
-  def self.build
-    configuration = self.new
-    yield(configuration) if block_given?
-    configuration
-  end
-
   def initialize
     @parameters = {}
+    yield(self) if block_given?
   end
 
   def parameter(id, options = {})
