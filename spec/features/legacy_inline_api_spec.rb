@@ -1,6 +1,11 @@
 require 'spec_helper'
 
 describe 'defining a legacy inline configuration' do
+  around :all do |example|
+    # Turn off deprecation warnings for tests
+    Gem::Deprecate.skip_during { example.run }
+  end
+
   it 'populates the configuration value with the source value' do
     config = Isomer.configure(:test, payload: {'host' => 'example.com'}) do |config|
       config.parameter :host

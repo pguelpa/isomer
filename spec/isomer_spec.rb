@@ -2,6 +2,11 @@ require 'spec_helper'
 
 describe Isomer do
   describe '.configure' do
+    around :all do |example|
+      # Turn off deprecation warnings for tests
+      Gem::Deprecate.skip_during { example.run }
+    end
+
     before do
       allow(Isomer::Base).to receive(:from)
     end

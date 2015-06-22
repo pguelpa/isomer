@@ -13,4 +13,9 @@ module Isomer
       yield(self)
     end.from(source_type, options)
   end
+
+  class << self
+    extend Gem::Deprecate
+    deprecate :configure, 'Isomer::Configuration', 2016, 1
+  end
 end
