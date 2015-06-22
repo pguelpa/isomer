@@ -11,7 +11,8 @@ module Isomer
       when :test
         Isomer::Sources::Dictionary.new(options[:payload])
       when :yaml
-        Isomer::Sources::Yaml.new(options)
+        file = options.delete(:file)
+        Isomer::Sources::Yaml.new(file, options)
       when :environment
         Isomer::Sources::Environment.new(options)
       else
