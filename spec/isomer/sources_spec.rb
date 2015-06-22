@@ -4,9 +4,7 @@ describe Isomer::Sources do
   describe '.factory' do
     context 'with a source of :yaml' do
       it 'uses the yaml source' do
-        Isomer::Sources::Yaml.
-          should_receive(:new).
-          with([], path: '/tmp/foo/bar.yml', base: 'development')
+        expect(Isomer::Sources::Yaml).to receive(:new).with(path: '/tmp/foo/bar.yml', base: 'development')
 
         Isomer::Sources.factory(:yaml, [], path: '/tmp/foo/bar.yml', base: 'development')
       end
@@ -14,21 +12,17 @@ describe Isomer::Sources do
 
     context 'with a source of :environment' do
       it 'uses the environment source' do
-        Isomer::Sources::Environment.
-          should_receive(:new).
-          with([], prefix: 'APP_')
+        expect(Isomer::Sources::Environment).to receive(:new).with(prefix: 'APP_')
 
         Isomer::Sources.factory(:environment, [], prefix: 'APP_')
       end
     end
 
     context 'with a source of :test' do
-      it 'uses the test source' do
-        Isomer::Sources::Test.
-          should_receive(:new).
-          with([], payload: {})
+      it 'uses the Hash source with the payload' do
+        expect(Isomer::Sources::Hash).to receive(:new).with('news' => 'BBC')
 
-        Isomer::Sources.factory(:test, [], payload: {})
+        Isomer::Sources.factory(:test, [], payload: {'news' => 'BBC'})
       end
     end
   end

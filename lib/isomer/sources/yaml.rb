@@ -3,29 +3,36 @@ require 'yaml'
 class Isomer::Sources::Yaml < Isomer::Sources::Base
   attr_reader :file, :base, :required
 
-  def initialize(parameters, options={})
-    @file = options[:file].to_s
-    raise Isomer::Error, "YAML source requires the 'file' parameter" if file.empty?
-
-    @base = options[:base]
+  def initialize(file, options={})
+    @file = file
     @required = !!options[:required]
 
-    super(parameters)
+    @base = options[:base]
+  end
+
+  def get(name)
+    configuration[name]
+  end
+
+  private
+
+  def configuration
+    @configuration ||= load
   end
 
   def load
     if File.exists?(file)
       values = YAML.load_file(file)
       if !values.is_a?(Hash)
-        @configuration = {}
+        {}
       elsif base && values.has_key?(base)
-        @configuration = values[base] || {}
+        values[base] || {}
       else
-        @configuration = values
+        values
       end
     else
       raise Isomer::Error, "Missing required configuration file '#{file}'" if required
-      @configuration = {}
+      {}
     end
   end
 end

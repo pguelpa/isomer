@@ -2,14 +2,7 @@
 
 [![Build Status](https://travis-ci.org/pguelpa/isomer.png?branch=master)](https://travis-ci.org/pguelpa/isomer)
 
-Isomer is a gem to help manage your application's configuration files.
-It is built with the following ideas in mind:
-
-* Easily define, store, and save configuration parameters
-* Work with YAML files and environment variables
-* Allow for mapping from file / environment variables to parameter
-* Allow for required parameters
-* Allow for default parameters
+Isomer is a gem to help manage your application's configuration with the idea that configuration objects should be separate from the source they are loaded from. This allows you change where you store your configuration without breaking any internal code which uses that configuration object.
 
 ## Installation
 
@@ -27,67 +20,71 @@ Or install it yourself as:
 
 ## Usage
 
-For most configurations, you can use the simple setup approach
+Jumping right into a usage example:
 
 ```ruby
-MY_FANCY_CONFIGURATION = Isomer.configure(:yaml, file: File.join('config', 'fancy.yml')) do |config|
-  config.parameter :url, name: 'host'
-  config.parameter :api_key, required: true
-  config.parameter :timeout
-
-  config.parameter :logger, default: Rails.logger
+nucleus = Isomer::Nucleus.new do |n|
+  n.parameter :url, name: 'host'
+  n.parameter :api_key, required: true
+  n.parameter :timeout
+  n.parameter :logger, default: Rails.logger
 end
-```
 
-If you have a more complex setup, or want add extra methods to your configuration class, you can create your own.
+yaml = Isomer::Sources::YAML.new(File.join('config', 'fancy.yml'))
+environment = Isomer::Sources::Enviroment.new(prefix: 'FANCY_')
 
-```ruby
-class MyFancyConfiguration < Isomer::Base
-  parameter :url, name: 'host'
-  parameter :api_key, required: true
-  parameter :timeout
-
-  parameter :logger, default: Rails.logger
-end
+CONFIG = Isomer::Configuration.hydrate(nucleus, yaml, environment)
 
 ...
 
-# In some initializer
-MY_FANCY_CONFIG = MyFancyConfiguration.from(:yaml, file: File.join('config', 'fancy.yml'))
+Client.new(CONFIG.url, timeout: CONFIG.timeout)
 ```
 
-## Parameters
+## Nucleus
 
-The core of Isomer is allowing you to define the parameters to pull out of your configuration source.  It takes a parameter name along with a number of options.
+The `Nucleus` is what defines the structure of your configuration. A nucleus is made up of one or more parameters. Each parameter requires a name which is how you access the value from the configuration object. It is also the default value used to lookup a parameter from a given source.
 
-The name will be how you access the value from the configuration object.  It also is the default value used when trying to find the value of the parameter in the source.
+Additionally, you can specify options for an alternative lookup name, for a default value, and to flag a parameter as required.
 
-You can also specify a number of parameters:
-
-* `required`: Means this parameter is required.  If any are missing, `from` will raise a Isomer::RequiredParameterError.  Defaults to `false`
+* `required`: Means this parameter is required.  If any are missing, `validate!` will raise a Isomer::RequiredParameterError.  Defaults to `false`
 * `name`: If the configuration source uses a different name than that of the parameter
 * `default`: If you want to specify a default value
 
+### Example
+
+```ruby
+nucleus = Isomer::Nucleus.new do |n|
+  n.parameter :url, name: 'host'
+  n.parameter :api_key, required: true
+  n.parameter :timeout
+  n.parameter :logger, default: Rails.logger
+end
+```
+
 ## Sources
 
-### Initialize with a YAML file
+Sources handle how to lookup a configuration value. You need to define the source that you want to load the configuration from. Isomer comes with sources for:
+
+- YAML files `Isomer::Sources::YAML`
+- Environment variables `Isomer::Sources::Environment`
+- Hashes `Isomer::Sources::Hash`
+
+You can also define and use your own source by inheriting from and adhering to the interface defined in `Isomer::Sources::Base`.
+
+### YAML
 
 #### Options
 
-* `file`: Path to the YAML file (required)
 * `base`: If there are multiple configurations (eg. for different environments), you can specify which one to use
 * `required`: If the configuration file is required
-
 
 #### Example
 
 ```ruby
-MY_FANCY_CONFIGURATION = MyFancyConfiguration.from(:yaml, file: Rails.root.join('config', 'fancy.yml'), base: Rails.env) do |config|
-  ...
-end
+Isomer::Sources::YAML.new(File.join('config', 'fancy.yml'), base: Rails.env, required: true)
 ```
 
-### Initialize with environment variables
+### Environment
 
 #### Options
 
@@ -97,23 +94,34 @@ end
 #### Example
 
 ```ruby
-MY_FANCY_CONFIGURATION = MyFancyConfiguration.from(:environment, prefix: 'FANCY_CONFIG_') do |config|
-  ...
-end
+Isomer::Sources::Enviroment.new(prefix: 'FANCY_')
 ```
 
-### Initialize with a hash (useful for testing)
-
-#### Options
-
-* `payload`: The hash of values that you want
+### Hash
 
 #### Example
 
 ```ruby
-MY_FANCY_CONFIGURATION = MyFancyConfiguration.from(:test, payload: {'foo' => 'bar'}) do |config|
-  ...
-end
+Isomer::Sources::Hash.new('foo' => 'bar')
+```
+
+## Configuration
+
+
+Configuration objects are hydrated from a nucleus and one or more sources. A new object will be returned to you which is the instance of your configuration populated with values from the source objects.
+
+When multiple sources are given, the latter will take precedence over the former.
+
+You can check the validity of a configuration object by calling `valid?` on it. You can get an array of errors back by calling `errors`.
+
+#### Example
+
+```ruby
+CONFIG = Isomer::Configuration.hydrate(nucleus, yaml, environment)
+
+...
+
+Client.new(CONFIG.url, timeout: CONFIG.timeout)
 ```
 
 ## Contributing

@@ -2,63 +2,60 @@ require 'spec_helper'
 
 describe Isomer::Sources::Yaml do
   describe '.new' do
-    it 'blows up if the file parameter is missing' do
-      expect {
-        Isomer::Sources::Yaml.new(anything)
-      }.to raise_error(Isomer::Error, "YAML source requires the 'file' parameter")
-    end
 
-    it 'always converts the file to a string' do
-      source = Isomer::Sources::Yaml.new(anything, file: :foo)
-      source.file.should == 'foo'
-    end
   end
 
-  describe '#load' do
+  describe '#get' do
     context 'when the file exists' do
-      context 'when the configuration values are a hash' do
-        it 'sets the configuration to the YAML file contents' do
-          File.stub(:exists?).and_return(true)
-          YAML.should_receive(:load_file).with('/home/configuration.yml').and_return({'foo' => 'bar'})
+      before do
+        allow(File).to receive(:exists?).and_return(true)
+      end
 
-          source = Isomer::Sources::Yaml.new(anything, file: '/home/configuration.yml')
-          source.load
+      it 'only loads the file once' do
+        expect(YAML).to receive(:load_file).with('/home/configuration.yml').once.and_return({})
 
-          source.configuration.should == {'foo' => 'bar'}
+        source = described_class.new('/home/configuration.yml')
+        2.times { source.get('foo') }
+      end
+
+      context 'when file does not load into a hash' do
+        it 'returns nil for configuration parameters' do
+          allow(YAML).to receive(:load_file).and_return('string value')
+
+          source = described_class.new('anything.yml')
+          expect(source.get('foo')).to be_nil
         end
       end
 
-      context 'when the configuration values are not a hash' do
-        it 'sets the configuration to an empty hash' do
-          File.stub(:exists?).and_return(true)
-          YAML.stub(:load_file).and_return('string value')
+      context 'when the file loads as a hash' do
+        it 'returns configuration values from corresponding hash parameters' do
+          allow(YAML).to receive(:load_file).and_return({'foo' => 'bar'})
 
-          source = Isomer::Sources::Yaml.new(anything, file: 'anything.yml')
-          source.load
-
-          source.configuration.should == {}
-        end
-      end
-
-      context 'with a base' do
-        it 'returns the configuration under the base node' do
-          File.stub(:exists?).and_return(true)
-          YAML.stub(:load_file).and_return( 'production' => {'limit' => 100} )
-
-          source = Isomer::Sources::Yaml.new(anything, file: 'filish.yml', base: 'production')
-          source.load
-
-          source.configuration.should == {'limit' => 100}
+          source = described_class.new('anything.yml')
+          expect(source.get('foo')).to eq('bar')
         end
 
-        it 'returns an empty hash if the content is nil' do
-          File.stub(:exists?).and_return(true)
-          YAML.stub(:load_file).and_return( 'production' => nil )
+        it 'returns nil if the corresponding hash parameter does not exist' do
+          allow(YAML).to receive(:load_file).and_return({})
+          source = described_class.new('anything.yml')
 
-          source = Isomer::Sources::Yaml.new(anything, file: 'filish.yml', base: 'production')
-          source.load
+          expect(source.get('foo')).to be_nil
+        end
 
-          source.configuration.should == {}
+        context 'with a base' do
+          it 'returns configuration values from corresponding hash parameters under the base node' do
+            allow(YAML).to receive(:load_file).and_return('production' => {'limit' => 100})
+            source = described_class.new(anything, base: 'production')
+
+            expect(source.get('limit')).to eq(100)
+          end
+
+          it 'returns nil if the corresponding hash parameter does not exist under the base node' do
+            allow(YAML).to receive(:load_file).and_return('production' => {})
+            source = described_class.new(anything, base: 'production')
+
+            expect(source.get('foo')).to be_nil
+          end
         end
       end
     end
@@ -66,22 +63,21 @@ describe Isomer::Sources::Yaml do
     context 'when the file does not exist' do
       context 'when it is not required' do
         it 'does not blow up' do
-          source = Isomer::Sources::Yaml.new(anything, file: '/home/configuration.yml')
-          expect { source.load }.to_not raise_error
+          source = described_class.new('anything.yml')
+          expect { source.get(anything) }.to_not raise_error
         end
 
-        it 'sets the configuration to an empty hash' do
-          source = Isomer::Sources::Yaml.new(anything, file: '/home/configuration.yml')
-          source.load
-          source.configuration.should == {}
+        it 'returns nil for configuration values' do
+          source = described_class.new('anything.yml')
+          expect(source.get('anything')).to be_nil
         end
       end
 
       context 'when it is required' do
         it 'raises an error' do
-          source = Isomer::Sources::Yaml.new(anything, file: '/home/configuration.yml', required: true)
+          source = described_class.new('/home/configuration.yml', required: true)
           expect {
-            source.load
+            source.get(anything)
           }.to raise_error(Isomer::Error, "Missing required configuration file '/home/configuration.yml'")
         end
       end

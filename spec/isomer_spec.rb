@@ -2,8 +2,13 @@ require 'spec_helper'
 
 describe Isomer do
   describe '.configure' do
+    around :all do |example|
+      # Turn off deprecation warnings for tests
+      Gem::Deprecate.skip_during { example.run }
+    end
+
     before do
-      Isomer::Base.stub(:from)
+      allow(Isomer::Base).to receive(:from)
     end
 
     it 'yields the configuration to the class' do
@@ -14,10 +19,10 @@ describe Isomer do
 
     it 'creates a new instance of the configuration class' do
       klass = double('Anonymous Class')
-      Class.stub(:new).with(Isomer::Base).and_return(klass)
+      allow(Class).to receive(:new).with(Isomer::Base).and_return(klass)
 
-      klass.should_receive(:from).with(:foo, :bar).and_return(:baz)
-      Isomer.configure(:foo, :bar).should == :baz
+      expect(klass).to receive(:from).with(:foo, :bar)
+      Isomer.configure(:foo, :bar)
     end
   end
 end
