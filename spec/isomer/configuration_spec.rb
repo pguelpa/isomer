@@ -105,14 +105,14 @@ describe Isomer::Configuration do
     end
 
     context 'when one or more sources define a value' do
-      it 'returns the last value defined by any source' do
+      it 'returns the last non-nil value defined by any source' do
         nucleus = Isomer::Nucleus.new { |n| n.parameter :bar, default: 'baz' }
         source_1 = Isomer::Sources::Dictionary.new('bar' => 'boop')
         source_2 = Isomer::Sources::Dictionary.new('bar' => 'blop')
-        source_3 = Isomer::Sources::Dictionary.new('bar' => 'pop')
+        source_3 = Isomer::Sources::Dictionary.new({})
         config = described_class.new(nucleus, source_1, source_2, source_3)
 
-        expect(config.get(nucleus.parameters[:bar])).to eq('pop')
+        expect(config.get(nucleus.parameters[:bar])).to eq('blop')
       end
     end
   end

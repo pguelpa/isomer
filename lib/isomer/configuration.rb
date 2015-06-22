@@ -27,7 +27,7 @@ module Isomer
     end
 
     def get(parameter)
-      sources.map { |s| s.get(parameter.name) }.last || parameter.default
+      sources.map { |s| s.get(parameter.name) }.compact.last || parameter.default
     end
   end
 end

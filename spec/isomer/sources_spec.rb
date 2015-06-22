@@ -4,9 +4,9 @@ describe Isomer::Sources do
   describe '.factory' do
     context 'with a source of :yaml' do
       it 'uses the yaml source' do
-        expect(Isomer::Sources::Yaml).to receive(:new).with(path: '/tmp/foo/bar.yml', base: 'development')
+        expect(Isomer::Sources::Yaml).to receive(:new).with('/tmp/foo/bar.yml', base: 'development')
 
-        Isomer::Sources.factory(:yaml, [], path: '/tmp/foo/bar.yml', base: 'development')
+        Isomer::Sources.factory(:yaml, [], file: '/tmp/foo/bar.yml', base: 'development')
       end
     end
 
