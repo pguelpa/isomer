@@ -4,7 +4,7 @@ describe 'defining a configuration' do
   context 'with a single source' do
     it 'populates the configuration value with the source value' do
       nucleus = Isomer::Nucleus.new { |n| n.parameter :host }
-      source = Isomer::Sources::Hash.new('host' => 'example.com')
+      source = Isomer::Sources::Dictionary.new('host' => 'example.com')
       config = Isomer::Configuration.hydrate(nucleus, source)
 
       expect(config.host).to eq('example.com')
@@ -13,7 +13,7 @@ describe 'defining a configuration' do
     context 'with a parameter name alias' do
       it 'populates the configuration value using the override name parameter' do
         nucleus = Isomer::Nucleus.new { |n| n.parameter :host, name: 'hostname' }
-        source = Isomer::Sources::Hash.new('hostname' => 'example.com')
+        source = Isomer::Sources::Dictionary.new('hostname' => 'example.com')
         config = Isomer::Configuration.hydrate(nucleus, source)
 
         expect(config.host).to eq('example.com')
@@ -27,7 +27,7 @@ describe 'defining a configuration' do
             n.parameter :host, required: true
             n.parameter :timeout, required: true
           end
-          source = Isomer::Sources::Hash.new({'host' => anything, 'timeout' => anything})
+          source = Isomer::Sources::Dictionary.new({'host' => anything, 'timeout' => anything})
           config = Isomer::Configuration.hydrate(nucleus, source)
 
           expect(config.valid?).to be(true)
@@ -38,7 +38,7 @@ describe 'defining a configuration' do
             n.parameter :host, required: true
             n.parameter :timeout, required: true
           end
-          source = Isomer::Sources::Hash.new({'host' => anything, 'timeout' => anything})
+          source = Isomer::Sources::Dictionary.new({'host' => anything, 'timeout' => anything})
           config = Isomer::Configuration.hydrate(nucleus, source)
 
           expect(config.errors).to be_empty
@@ -51,7 +51,7 @@ describe 'defining a configuration' do
             n.parameter :host, required: true
             n.parameter :timeout, required: true
           end
-          source = Isomer::Sources::Hash.new({'host' => anything})
+          source = Isomer::Sources::Dictionary.new({'host' => anything})
           config = Isomer::Configuration.hydrate(nucleus, source)
 
           expect(config.valid?).to be(false)
@@ -63,7 +63,7 @@ describe 'defining a configuration' do
             n.parameter :timeout, required: true
             n.parameter :key, required: true
           end
-          source = Isomer::Sources::Hash.new({'host' => '', 'key' => anything})
+          source = Isomer::Sources::Dictionary.new({'host' => '', 'key' => anything})
           config = Isomer::Configuration.hydrate(nucleus, source)
 
           expect(config.errors).to contain_exactly('timeout is required', 'host must not be empty')
@@ -76,7 +76,7 @@ describe 'defining a configuration' do
         nucleus = Isomer::Nucleus.new do |n|
           n.parameter :timeout, default: 300
         end
-        source = Isomer::Sources::Hash.new({})
+        source = Isomer::Sources::Dictionary.new({})
         config = Isomer::Configuration.hydrate(nucleus, source)
 
         expect(config.timeout).to eq(300)
@@ -86,7 +86,7 @@ describe 'defining a configuration' do
         nucleus = Isomer::Nucleus.new do |n|
           n.parameter :timeout, default: 300
         end
-        source = Isomer::Sources::Hash.new({'timeout' => 100})
+        source = Isomer::Sources::Dictionary.new({'timeout' => 100})
         config = Isomer::Configuration.hydrate(nucleus, source)
 
         expect(config.timeout).to eq(100)
@@ -97,8 +97,8 @@ describe 'defining a configuration' do
   context 'with multiple sources' do
     it 'populates the configuration value with the source value' do
       nucleus = Isomer::Nucleus.new { |n| n.parameter :host }
-      source_a = Isomer::Sources::Hash.new('host' => 'example.com')
-      source_b = Isomer::Sources::Hash.new('host' => 'my-example.com')
+      source_a = Isomer::Sources::Dictionary.new('host' => 'example.com')
+      source_b = Isomer::Sources::Dictionary.new('host' => 'my-example.com')
       config = Isomer::Configuration.hydrate(nucleus, source_a, source_b)
 
       expect(config.host).to eq('my-example.com')

@@ -25,7 +25,7 @@ module Isomer
       def load
         if File.exists?(file)
           values = YAML.load_file(file)
-          if !values.instance_of?(::Hash)
+          if !values.instance_of?(Hash)
             {}
           elsif base && values.has_key?(base)
             values[base] || {}

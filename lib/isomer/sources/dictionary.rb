@@ -1,6 +1,6 @@
 module Isomer
   module Sources
-    class Hash < Isomer::Sources::Base
+    class Dictionary < Isomer::Sources::Base
       def initialize(configuration)
         @configuration = configuration
       end
