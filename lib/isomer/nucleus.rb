@@ -1,13 +1,15 @@
-class Isomer::Nucleus
-  attr_reader :parameters
+module Isomer
+  class Nucleus
+    attr_reader :parameters
 
-  def initialize
-    @parameters = {}
-    yield(self) if block_given?
-  end
+    def initialize
+      @parameters = {}
+      yield(self) if block_given?
+    end
 
-  def parameter(id, options = {})
-    parameter = Isomer::Parameter.new(id, options)
-    @parameters[id] = parameter
+    def parameter(id, options = {})
+      parameter = Isomer::Parameter.new(id, options)
+      @parameters[id] = parameter
+    end
   end
 end
