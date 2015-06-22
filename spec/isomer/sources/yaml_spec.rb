@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 describe Isomer::Sources::Yaml do
-  describe '.new' do
-
-  end
-
   describe '#get' do
     context 'when the file exists' do
       before do
@@ -21,8 +17,8 @@ describe Isomer::Sources::Yaml do
       context 'when file does not load into a hash' do
         it 'returns nil for configuration parameters' do
           allow(YAML).to receive(:load_file).and_return('string value')
-
           source = described_class.new('anything.yml')
+
           expect(source.get('foo')).to be_nil
         end
       end
@@ -30,8 +26,8 @@ describe Isomer::Sources::Yaml do
       context 'when the file loads as a hash' do
         it 'returns configuration values from corresponding hash parameters' do
           allow(YAML).to receive(:load_file).and_return({'foo' => 'bar'})
-
           source = described_class.new('anything.yml')
+
           expect(source.get('foo')).to eq('bar')
         end
 
@@ -61,6 +57,10 @@ describe Isomer::Sources::Yaml do
     end
 
     context 'when the file does not exist' do
+      before do
+        allow(File).to receive(:exists?).and_return(false)
+      end
+
       context 'when it is not required' do
         it 'does not blow up' do
           source = described_class.new('anything.yml')
@@ -76,6 +76,7 @@ describe Isomer::Sources::Yaml do
       context 'when it is required' do
         it 'raises an error' do
           source = described_class.new('/home/configuration.yml', required: true)
+
           expect {
             source.get(anything)
           }.to raise_error(Isomer::Error, "Missing required configuration file '/home/configuration.yml'")

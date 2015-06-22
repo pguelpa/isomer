@@ -20,7 +20,7 @@ describe Isomer::Sources do
 
     context 'with a source of :test' do
       it 'uses the Hash source with the payload' do
-        expect(Isomer::Sources::Hash).to receive(:new).with('news' => 'BBC')
+        expect(Isomer::Sources::Dictionary).to receive(:new).with('news' => 'BBC')
 
         Isomer::Sources.factory(:test, [], payload: {'news' => 'BBC'})
       end

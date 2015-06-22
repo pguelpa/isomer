@@ -15,7 +15,7 @@ describe Isomer::Configuration do
     end
 
     it 'defines a method for each parameter that returns the appropriate parameter' do
-      source = Isomer::Sources::Hash.new('foo' => 'bar')
+      source = Isomer::Sources::Dictionary.new('foo' => 'bar')
       nucleus = Isomer::Nucleus.new { |n| n.parameter :foo }
 
       config = described_class.hydrate(nucleus, source)
@@ -43,7 +43,7 @@ describe Isomer::Configuration do
 
       it 'returns an error for any required parameters that are blank' do
         nucleus = Isomer::Nucleus.new { |n| n.parameter(:name, required: true) }
-        source = Isomer::Sources::Hash.new('name' => '')
+        source = Isomer::Sources::Dictionary.new('name' => '')
         config = described_class.new(nucleus, source)
 
         expect(config.errors).to eq(['name must not be empty'])
@@ -51,7 +51,7 @@ describe Isomer::Configuration do
 
       it 'returns an empty array when there are no errors' do
         nucleus = Isomer::Nucleus.new { |n| n.parameter(:name, required: true) }
-        source = Isomer::Sources::Hash.new('name' => 'Shaggy')
+        source = Isomer::Sources::Dictionary.new('name' => 'Shaggy')
         config = described_class.new(nucleus, source)
 
         expect(config.errors).to eq([])
@@ -72,7 +72,7 @@ describe Isomer::Configuration do
     context 'with validations' do
       it 'returns true when there are no validation errors' do
         nucleus = Isomer::Nucleus.new { |n| n.parameter(:name, required: true) }
-        source = Isomer::Sources::Hash.new('name' => 'Scooby')
+        source = Isomer::Sources::Dictionary.new('name' => 'Scooby')
         config = described_class.new(nucleus, source)
 
         expect(config.valid?).to be(true)
@@ -107,9 +107,9 @@ describe Isomer::Configuration do
     context 'when one or more sources define a value' do
       it 'returns the last value defined by any source' do
         nucleus = Isomer::Nucleus.new { |n| n.parameter :bar, default: 'baz' }
-        source_1 = Isomer::Sources::Hash.new('bar' => 'boop')
-        source_2 = Isomer::Sources::Hash.new('bar' => 'blop')
-        source_3 = Isomer::Sources::Hash.new('bar' => 'pop')
+        source_1 = Isomer::Sources::Dictionary.new('bar' => 'boop')
+        source_2 = Isomer::Sources::Dictionary.new('bar' => 'blop')
+        source_3 = Isomer::Sources::Dictionary.new('bar' => 'pop')
         config = described_class.new(nucleus, source_1, source_2, source_3)
 
         expect(config.get(nucleus.parameters[:bar])).to eq('pop')

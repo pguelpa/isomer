@@ -1,5 +1,7 @@
-class Isomer::Error < StandardError
-end
+module Isomer
+  class Error < StandardError
+  end
 
-class Isomer::RequiredParameterError < Isomer::Error
+  class RequiredParameterError < Isomer::Error
+  end
 end

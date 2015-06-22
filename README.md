@@ -67,7 +67,7 @@ Sources handle how to lookup a configuration value. You need to define the sourc
 
 - YAML files `Isomer::Sources::YAML`
 - Environment variables `Isomer::Sources::Environment`
-- Hashes `Isomer::Sources::Hash`
+- Hashes `Isomer::Sources::Dictionary`
 
 You can also define and use your own source by inheriting from and adhering to the interface defined in `Isomer::Sources::Base`.
 
@@ -102,7 +102,7 @@ Isomer::Sources::Enviroment.new(prefix: 'FANCY_')
 #### Example
 
 ```ruby
-Isomer::Sources::Hash.new('foo' => 'bar')
+Isomer::Sources::Dictionary.new('foo' => 'bar')
 ```
 
 ## Configuration
